@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bonus Calculator</title>
+  <style>
+    body { 
+      font-family: sans-serif; 
+      max-width: 400px; 
+      margin: 20px auto; 
+      padding: 20px; 
+      background: #f9f9f9; 
+      border-radius: 10px; /* Cantos arredondados */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra ao redor do conteúdo */
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+    }
+    h2 {
+      text-align: center; 
+      margin-top: 40px; /* Aumentado para criar mais espaço entre a logo e o título */
+      margin-bottom: -15px; /* Mantém o espaço abaixo do título */
+    }
+    label, select, input, button { 
+      display: block; 
+      width: 100%; 
+      margin-top: 15px; 
+      box-sizing: border-box; /* Inclui padding e border no tamanho total */
+    }
+    input, select, button { 
+      padding: 10px; 
+      font-size: 16px; 
+    }
+    .switch-container { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center;
+      width: 100%; 
+      margin-top: 15px; 
+    }
+    .switch-option {
+      flex: 1;
+      padding: 10px;
+      margin: 0 5px;
+      text-align: center;
+      border: 2px solid #ccc;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #fff;
+      font-size: 16px;
+    }
+    .switch-option.active {
+      background-color: hsl(54, 100%, 50%);
+      color: rgb(0, 0, 0);
+      border-color: hsl(54, 100%, 50%);
+      font-weight: bold; /* Deixa o texto em negrito */
+    }
+    .language-buttons {
+      display: flex;
+      gap: 10px;
+      margin-left: auto;
+    }
+    .language-buttons button {
+      padding: 5px 10px;
+      font-size: 14px;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #dddddd;
+      color: rgb(0, 0, 0);
+    }
+    .language-buttons button.active {
+      background-color: hsl(54, 100%, 50%);
+      color: black;
+    }
+    button { 
+      margin-top: 20px; 
+      background: hsl(54, 100%, 50%); 
+      color: rgb(0, 0, 0); 
+      border: none; 
+      font-weight: bold; /* Deixa o texto em negrito */
+      cursor: pointer;
+    }
+    #resultado { 
+      margin-top: 20px; 
+      font-weight: bold; 
+      text-align: center; /* Centraliza o texto do resultado */
+      width: 100%; 
+    }
+    .bonus-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+    .language-switch {
+      display: flex;
+      align-items: center;
+    }
+    .language-switch img {
+      width: 30px;
+      height: 20px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+    .logo-container {
+      position: absolute;
+      top: 10px; /* Ajusta a posição vertical */
+      left: 50%; /* Centraliza horizontalmente */
+      transform: translateX(-50%); /* Garante o alinhamento central */
+      background-color: black; /* Fundo preto */
+      padding: 10px 20px; /* Espaçamento interno */
+      border-radius: 5px; /* Cantos arredondados */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para destaque */
+    }
+
+    .logo-container img {
+      height: 30px; /* Altura da logo */
+    }
+    .contrast-switch {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+
+    .contrast-switch button {
+      background-color: #f9f9f9;
+      color: #000;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-size: 14px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .contrast-switch button.dark {
+      background-color: #333;
+      color: #fff;
+      border: 1px solid #555;
+    }
+
+    body.dark-mode {
+      background-color: #2c2c2c; /* Fundo grafite escuro */
+      color: #f9f9f9; /* Texto branco */
+    }
+
+    body.dark-mode input,
+    body.dark-mode select,
+    body.dark-mode button {
+      background-color: #444; /* Fundo dos inputs e botões */
+      color: #fff; /* Texto branco */
+      border: 1px solid #777; /* Borda cinza */
+    }
+
+    body.dark-mode .switch-option.active {
+      background-color: hsl(54, 100%, 50%); /* Mantém o fundo amarelo */
+      color: black; /* Garante que o texto permaneça preto */
+    }
+
+    body.dark-mode .switch-option {
+      color: black; /* Garante que o texto permaneça preto */
+    }
+
+    body.dark-mode .contrast-switch button {
+      background-color: #444; /* Fundo do botão no modo escuro */
+      color: #fff; /* Texto branco */
+      border: 1px solid #777; /* Borda cinza */
+    }
+  </style>
+</head>
+<body>
+  <h2 id="titulo">Bonus Calculator</h2>
+
+  <div class="logo-container">
+    <img src="https://cdn.paxabetmv5.com/PaxaBetMV/images/logos/logo.png?v=2505020517" alt="Paxabet Logo">
+  </div>
+
+  <div class="switch-container">
+    <label id="label-moeda">Currency:</label>
+    <div class="language-buttons">
+      <button id="btn-en" class="active" onclick="alterarIdioma('en')">EN</button>
+      <button id="btn-pt" onclick="alterarIdioma('pt')">PT-BR</button>
+    </div>
+  </div>
+
+  <div class="switch-container">
+    <div id="mvr" class="switch-option active" onclick="selecionarMoeda('MVR')">MVR</div>
+    <div id="usd" class="switch-option" onclick="selecionarMoeda('USD')">USD</div>
+  </div>
+
+  <div class="contrast-switch">
+    <button id="contrast-toggle" onclick="toggleContrast()">🌙</button>
+  </div>
+
+  <label id="label-bonus">Bonus:</label>
+  <select id="bonus" onchange="atualizarInterface()">
+    <option value="upto25">Up to 25% Cashback bonus</option>
+    <option value="upto30">Up to 30% Cashback bonus</option>
+    <option value="upto40">Up to 40% Cashback bonus</option>
+    <option value="50cashback">50% Cashback</option>
+    <option value="weekly">Weekly Cashback</option>
+    <option value="loyalty">Loyalty bonus</option>
+  </select>
+
+  <label id="label-deposito">Deposit Amount:</label>
+  <input type="number" id="deposito" placeholder="Enter the deposit amount">
+
+  <label id="label-saque">Withdrawn Amount:</label>
+  <input type="number" id="saque" placeholder="Enter the withdrawn amount">
+
+  <button id="botao-calcular" onclick="calcularBonus()">Calculate Bonus</button>
+
+  <div id="resultado"></div>
+
+  <script>
+    let moedaSelecionada = "MVR"; // Define a moeda padrão como MVR
+    let idiomaAtual = "en"; // Define o idioma padrão como Inglês
+
+    const textos = {
+      pt: {
+        titulo: "Calculadora de Bônus",
+        moeda: "Moeda:",
+        bonus: "Bônus:",
+        deposito: "Valor Depositado:",
+        saque: "Valor Sacado:",
+        calcular: "Calcular Bônus",
+        erroDeposito: "Por favor, insira um valor válido para o depósito.",
+        erroElegibilidade: "Erro: O cliente não está elegível para este bônus (perda mínima não atingida).",
+        erroLoyalty: "Erro: O cliente não tem o valor mínimo de depósito.",
+        sucessoLoyalty: "Este bônus é adicionado uma vez por dia.",
+        placeholderDeposito: "Digite o valor do depósito",
+        placeholderSaque: "Digite o valor do saque",
+        perda: "Perda",
+        bonusTexto: "Bônus",
+        limiteBonus: "Bônus limitado a" // Mensagem de limite em português
+      },
+      en: {
+        titulo: "Bonus Calculator",
+        moeda: "Currency:",
+        bonus: "Bonus:",
+        deposito: "Deposit Amount:",
+        saque: "Withdrawn Amount:",
+        calcular: "Calculate Bonus",
+        erroDeposito: "Please enter a valid deposit amount.",
+        erroElegibilidade: "Error: The client is not eligible for this bonus (minimum loss not reached).",
+        erroLoyalty: "Error: The client does not meet the minimum deposit amount.",
+        sucessoLoyalty: "This bonus is added once per day.",
+        placeholderDeposito: "Enter the deposit amount",
+        placeholderSaque: "Enter the withdrawn amount",
+        perda: "Loss",
+        bonusTexto: "Bonus",
+        limiteBonus: "Bonus limited to" // Mensagem de limite em inglês
+      }
+    };
+
+    const limitesBonus = {
+      weekly: { MVR: 25000, USD: 1700 },
+      "50cashback": { MVR: 7500, USD: 500 },
+      upto25: { MVR: Infinity, USD: Infinity }, // Sem limite
+      upto30: { MVR: Infinity, USD: Infinity }, // Sem limite
+      upto40: { MVR: 7500, USD: 500 }, // Limite adicionado
+      loyalty: { MVR: Infinity, USD: Infinity } // Sem limite
+    };
+
+    function alterarIdioma(idioma) {
+      idiomaAtual = idioma;
+      const t = textos[idiomaAtual];
+
+      document.getElementById("titulo").innerText = t.titulo;
+      document.getElementById("label-moeda").innerText = t.moeda;
+      document.getElementById("label-bonus").innerText = t.bonus;
+      document.getElementById("label-deposito").innerText = t.deposito;
+      document.getElementById("label-saque").innerText = t.saque;
+      document.getElementById("botao-calcular").innerText = t.calcular;
+
+      // Atualiza os placeholders dos campos de entrada
+      document.getElementById("deposito").placeholder = t.placeholderDeposito;
+      document.getElementById("saque").placeholder = t.placeholderSaque;
+
+      // Atualiza os botões de idioma
+      document.getElementById("btn-en").classList.toggle("active", idioma === "en");
+      document.getElementById("btn-pt").classList.toggle("active", idioma === "pt");
+    }
+
+    function selecionarMoeda(moeda) {
+      moedaSelecionada = moeda;
+
+      document.getElementById("mvr").classList.remove("active");
+      document.getElementById("usd").classList.remove("active");
+      document.getElementById(moeda.toLowerCase()).classList.add("active");
+    }
+
+    function atualizarInterface() {
+      const bonus = document.getElementById("bonus").value;
+      const saqueLabel = document.getElementById("label-saque");
+      const saqueInput = document.getElementById("saque");
+
+      if (bonus === "loyalty") {
+        saqueLabel.style.display = "none";
+        saqueInput.style.display = "none";
+      } else {
+        saqueLabel.style.display = "block";
+        saqueInput.style.display = "block";
+      }
+    }
+
+    function calcularBonus() {
+      const moeda = moedaSelecionada;
+      const bonus = document.getElementById("bonus").value;
+      const deposito = parseFloat(document.getElementById("deposito").value);
+      let saque = parseFloat(document.getElementById("saque").value);
+
+      if (isNaN(saque)) {
+        saque = 0;
+        document.getElementById("saque").value = saque;
+      }
+
+      const perda = deposito - saque;
+      let resultado = document.getElementById("resultado");
+      let percentual = 0;
+
+      if (isNaN(deposito) || deposito <= 0) {
+        resultado.innerText = textos[idiomaAtual].erroDeposito;
+        return;
+      }
+
+      if (bonus === "weekly") {
+        const min = moeda === "MVR" ? 500 : 30;
+        if (perda < min) {
+          resultado.innerText = textos[idiomaAtual].erroElegibilidade;
+          return;
+        }
+
+        const faixas = moeda === "MVR" ? [
+          { min: 500, max: 4999.99, pct: 4 },
+          { min: 5000, max: 9999.99, pct: 5 },
+          { min: 10000, max: 19999.99, pct: 6 },
+          { min: 20000, max: 49999.99, pct: 8 },
+          { min: 50000, max: 99999.99, pct: 10 },
+          { min: 100000, max: 149999.99, pct: 12 },
+          { min: 150000, max: Infinity, pct: 15 },
+        ] : [
+          { min: 30, max: 349.99, pct: 4 },
+          { min: 350, max: 699.99, pct: 5 },
+          { min: 700, max: 1399.99, pct: 6 },
+          { min: 1400, max: 3349.99, pct: 8 },
+          { min: 3350, max: 6999.99, pct: 10 },
+          { min: 7000, max: 9999.99, pct: 12 },
+          { min: 10000, max: Infinity, pct: 15 },
+        ];
+
+        for (let faixa of faixas) {
+          if (perda >= faixa.min && perda <= faixa.max) {
+            percentual = faixa.pct;
+            break;
+          }
+        }
+
+        const valorBonus = perda * (percentual / 100);
+
+        // Verifica o limite
+        if (valorBonus > limitesBonus.weekly[moeda]) {
+          resultado.innerText = `${textos[idiomaAtual].limiteBonus} ${limitesBonus.weekly[moeda].toLocaleString()} ${moeda}`;
+          return;
+        }
+
+        resultado.innerText = `${textos[idiomaAtual].perda}: ${perda.toFixed(2)} ${moeda} | ${textos[idiomaAtual].bonusTexto}: ${percentual}% = ${valorBonus.toFixed(2)} ${moeda}`;
+        return;
+      } else if (bonus === "50cashback") {
+        const min = moeda === "MVR" ? 75 : 5;
+
+        if (perda < min) {
+          resultado.innerText = textos[idiomaAtual].erroElegibilidade;
+          return;
+        }
+
+        const valorBonus = perda / 2;
+
+        // Verifica o limite
+        if (valorBonus > limitesBonus["50cashback"][moeda]) {
+          resultado.innerText = `${textos[idiomaAtual].limiteBonus} ${limitesBonus["50cashback"][moeda].toLocaleString()} ${moeda}`;
+          return;
+        }
+
+        resultado.innerText = `${textos[idiomaAtual].perda}: ${perda.toFixed(2)} ${moeda} | ${textos[idiomaAtual].bonusTexto}: 50% = ${valorBonus.toFixed(2)} ${moeda}`;
+        return;
+
+      } else if (bonus === "upto40") {
+        const min = moeda === "MVR" ? 75 : 5;
+        if (perda < min) {
+          resultado.innerText = textos[idiomaAtual].erroElegibilidade;
+          return;
+        }
+      
+        const faixas = moeda === "MVR" ? [
+          { min: 75, max: 1499.99, pct: 30 },
+          { min: 1500, max: Infinity, pct: 40 },
+        ] : [
+          { min: 5, max: 99.99, pct: 30 },
+          { min: 100, max: Infinity, pct: 40 },
+        ];
+      
+        let percentual = 0;
+        for (let faixa of faixas) {
+          if (perda >= faixa.min && perda <= faixa.max) {
+            percentual = faixa.pct;
+            break;
+          }
+        }
+      
+        const valorBonus = perda * (percentual / 100);
+      
+        // Verifica o limite
+        if (valorBonus > limitesBonus.upto40[moeda]) {
+          resultado.innerText = `${textos[idiomaAtual].limiteBonus} ${limitesBonus.upto40[moeda].toLocaleString()} ${moeda}`;
+          return;
+        }
+      
+        resultado.innerText = `${textos[idiomaAtual].perda}: ${perda.toFixed(2)} ${moeda} | ${textos[idiomaAtual].bonusTexto}: ${percentual}% = ${valorBonus.toFixed(2)} ${moeda}`;
+        return;
+      } else if (bonus === "upto25") {
+        const min = moeda === "MVR" ? 75 : 5;
+        if (perda < min) {
+          resultado.innerText = textos[idiomaAtual].erroElegibilidade;
+          return;
+        }
+      
+        const faixas = moeda === "MVR" ? [
+          { min: 75, max: 1499.99, pct: 15 },
+          { min: 1500, max: 29999.99, pct: 20 },
+          { min: 30000, max: Infinity, pct: 25 },
+        ] : [
+          { min: 5, max: 99.99, pct: 15 },
+          { min: 100, max: 1999.99, pct: 20 },
+          { min: 2000, max: Infinity, pct: 25 },
+        ];
+      
+        let percentual = 0;
+        for (let faixa of faixas) {
+          if (perda >= faixa.min && perda <= faixa.max) {
+            percentual = faixa.pct;
+            break;
+          }
+        }
+      
+        const valorBonus = perda * (percentual / 100);
+      
+        resultado.innerText = `${textos[idiomaAtual].perda}: ${perda.toFixed(2)} ${moeda} | ${textos[idiomaAtual].bonusTexto}: ${percentual}% = ${valorBonus.toFixed(2)} ${moeda}`;
+        return;
+      } else if (bonus === "upto30") {
+        const min = moeda === "MVR" ? 75 : 5;
+        if (perda < min) {
+          resultado.innerText = textos[idiomaAtual].erroElegibilidade;
+          return;
+        }
+      
+        const faixas = moeda === "MVR" ? [
+          { min: 75, max: 1499.99, pct: 20 },
+          { min: 1500, max: 29999.99, pct: 25 },
+          { min: 30000, max: Infinity, pct: 30 },
+        ] : [
+          { min: 5, max: 99.99, pct: 20 },
+          { min: 100, max: 1999.99, pct: 25 },
+          { min: 2000, max: Infinity, pct: 30 },
+        ];
+      
+        let percentual = 0;
+        for (let faixa of faixas) {
+          if (perda >= faixa.min && perda <= faixa.max) {
+            percentual = faixa.pct;
+            break;
+          }
+        }
+      
+        const valorBonus = perda * (percentual / 100);
+      
+        resultado.innerText = `${textos[idiomaAtual].perda}: ${perda.toFixed(2)} ${moeda} | ${textos[idiomaAtual].bonusTexto}: ${percentual}% = ${valorBonus.toFixed(2)} ${moeda}`;
+        return;
+      } else if (bonus === "loyalty") {
+        const faixas = moeda === "MVR" ? [
+          { min: 50000, max: 99999.99, valor: 50 },
+          { min: 100000, max: 199999.99, valor: 100 },
+          { min: 200000, max: 299999.99, valor: 200 },
+          { min: 300000, max: 399999.99, valor: 300 },
+          { min: 400000, max: 499999.99, valor: 400 },
+          { min: 500000, max: Infinity, valor: 1000 },
+        ] : [
+          { min: 3500, max: 6499.99, valor: 3.5 },
+          { min: 6500, max: 13499.99, valor: 6.5 },
+          { min: 13500, max: 19999.99, valor: 13.5 },
+          { min: 20000, max: 24999.99, valor: 20 },
+          { min: 25000, max: 29999.99, valor: 25 },
+          { min: 30000, max: Infinity, valor: 60 },
+        ];
+      
+        let valorBonus = 0;
+        for (let faixa of faixas) {
+          if (deposito >= faixa.min && deposito <= faixa.max) {
+            valorBonus = faixa.valor;
+            break;
+          }
+        }
+      
+        if (valorBonus > 0) {
+          resultado.innerText = `Depósito: ${deposito.toFixed(2)} ${moeda} | Bônus: ${valorBonus.toFixed(2)} ${moeda}\n\n${textos[idiomaAtual].sucessoLoyalty}`;
+        } else {
+          resultado.innerText = textos[idiomaAtual].erroLoyalty;
+        }
+        return;
+      }
+
+      const valorBonus = perda * (percentual / 100);
+
+      // Verifica o limite
+      if (valorBonus > limitesBonus.upto40[moeda]) {
+        resultado.innerText = `${textos[idiomaAtual].limiteBonus} ${limitesBonus.upto40[moeda].toLocaleString()} ${moeda}`;
+        return;
+      }
+
+      resultado.innerText = `${textos[idiomaAtual].perda}: ${perda.toFixed(2)} ${moeda} | ${textos[idiomaAtual].bonusTexto}: ${percentual}% = ${valorBonus.toFixed(2)} ${moeda}`;
+    }
+
+    function toggleContrast() {
+      const body = document.body;
+      const button = document.getElementById("contrast-toggle");
+
+      // Alterna a classe "dark-mode" no body
+      body.classList.toggle("dark-mode");
+
+      // Atualiza o ícone do botão
+      if (body.classList.contains("dark-mode")) {
+        button.innerText = "☀️"; // Ícone de sol para modo claro
+      } else {
+        button.innerText = "🌙"; // Ícone de lua para modo escuro
+      }
+    }
+  </script>
+</body>
+</html>
